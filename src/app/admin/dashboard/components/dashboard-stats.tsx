@@ -23,7 +23,7 @@ const stats = [
     bgColor: 'bg-green-100',
   },
   {
-    label: 'Active Webinars',
+    label: 'Total Webinars',
     value: '8',
     icon: BarChart3,
     color: 'text-orange-600',
@@ -33,18 +33,18 @@ const stats = [
 
 export function DashboardStats() {
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
           <div
             key={stat.label}
-            className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all"
+            className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">{stat.label}</p>
-                <p className="mt-2 text-3xl font-bold text-slate-900">
+                <p className="text-sm text-slate-500">{stat.label}</p>
+                <p className="mt-2 text-2xl font-semibold text-slate-900">
                   {stat.value}
                 </p>
               </div>
