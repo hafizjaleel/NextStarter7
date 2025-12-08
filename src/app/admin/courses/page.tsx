@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { CourseCard } from './components/course-card';
 import { SearchInput } from '@/components/search-input';
 import { FilterPanel } from '@/components/filter-panel';
