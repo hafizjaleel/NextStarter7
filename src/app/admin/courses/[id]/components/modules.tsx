@@ -56,21 +56,45 @@ const formatDuration = (totalMinutes: number): string => {
   }
 };
 
-export function CourseModules() {
-  const [modules, setModules] = useState(initialModules);
+export function CourseModules({ courseId }: CourseModulesProps) {
+  const [modules, setModules] = useState<Module[]>([]);
   const [lessons] = useState(initialLessons);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: number | null }>({
+  const [editingId, setEditingId] = useState<number | string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: number | string | null }>({
     isOpen: false,
     id: null,
   });
-  const [draggedId, setDraggedId] = useState<number | null>(null);
-  const [dragOverId, setDragOverId] = useState<number | null>(null);
+  const [draggedId, setDraggedId] = useState<number | string | null>(null);
+  const [dragOverId, setDragOverId] = useState<number | string | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     moduleOrder: '',
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch modules on mount
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch(`/api/v1/course/${courseId}/modules`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch modules');
+        }
+        const data = await response.json();
+        setModules(data.modules || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchModules();
+  }, [courseId]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
