@@ -83,6 +83,8 @@ export function CourseLessons() {
     id: null,
   });
   const [selectedLessonIds, setSelectedLessonIds] = useState<number[]>([]);
+  const [draggedId, setDraggedId] = useState<number | null>(null);
+  const [dragOverId, setDragOverId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     type: 'video',
