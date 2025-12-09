@@ -448,6 +448,12 @@ export function CourseLessons() {
                     muxVideo: '',
                     pdfFile: null,
                     downloadableFile: null,
+                    quizData: {
+                      questions: [],
+                      passingScore: 70,
+                      timeLimit: 0,
+                      maxAttempts: 0,
+                    },
                   });
                 }}
                 className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
