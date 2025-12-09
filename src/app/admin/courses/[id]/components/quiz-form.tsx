@@ -211,7 +211,20 @@ export function QuizForm({ quizData, onQuizDataChange }: QuizFormProps) {
       {/* Quiz Settings */}
       <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
         <h3 className="mb-4 text-base font-bold text-slate-900">Quiz Settings</h3>
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-4">
+          <div>
+            <label htmlFor="numberOfQuestions" className="block text-sm font-medium text-slate-900 mb-1">
+              Number of Questions
+            </label>
+            <input
+              id="numberOfQuestions"
+              type="number"
+              min="0"
+              value={desiredNumberOfQuestions}
+              onChange={(e) => handleNumberOfQuestionsChange(parseInt(e.target.value) || 0)}
+              className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 transition focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
           <div>
             <label htmlFor="passingScore" className="block text-sm font-medium text-slate-900 mb-1">
               Passing Score (%)
