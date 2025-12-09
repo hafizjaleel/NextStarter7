@@ -98,20 +98,22 @@ export function CourseModules() {
 
   const handleAddModule = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.title) {
+    const moduleOrder = parseInt(formData.moduleOrder, 10);
+    if (formData.title && !isNaN(moduleOrder) && moduleOrder > 0) {
       if (editingId !== null) {
         // Update existing module
-        setModules(modules.map((m) => (m.id === editingId ? { ...m, title: formData.title } : m)));
+        setModules(modules.map((m) => (m.id === editingId ? { ...m, title: formData.title, moduleOrder } : m)));
         setEditingId(null);
       } else {
         // Add new module
         const newModule = {
           id: Math.max(...modules.map((m) => m.id), 0) + 1,
           title: formData.title,
+          moduleOrder,
         };
         setModules([...modules, newModule]);
       }
-      setFormData({ title: '' });
+      setFormData({ title: '', moduleOrder: '' });
       setIsPanelOpen(false);
     }
   };
