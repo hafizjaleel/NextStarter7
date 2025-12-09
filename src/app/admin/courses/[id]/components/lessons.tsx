@@ -188,7 +188,7 @@ export function CourseLessons() {
           maxAttempts: 0,
         },
       });
-      setShowForm(false);
+      setIsPanelOpen(false);
     }
   };
 
