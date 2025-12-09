@@ -403,33 +403,23 @@ export function CourseLessons() {
                       </div>
                       <div className="flex flex-col items-center gap-1">
                         <button
-                          onClick={() => handleSelectLesson(lesson.id)}
+                          onClick={() => handleToggleStatus(lesson.id)}
                           className={`relative inline-flex h-6 w-11 rounded-full transition-colors ${
-                            selectedLessonIds.includes(lesson.id)
+                            lesson.published
                               ? 'bg-emerald-600'
                               : 'bg-slate-200'
                           }`}
-                          aria-label={`Toggle selection for ${lesson.title}`}
+                          aria-label={`Toggle status for ${lesson.title}`}
                         >
                           <span
                             className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
-                              selectedLessonIds.includes(lesson.id) ? 'translate-x-5' : 'translate-x-0.5'
+                              lesson.published ? 'translate-x-5' : 'translate-x-0.5'
                             }`}
                           />
                         </button>
-                        <span className="text-xs text-slate-500">Select</span>
+                        <span className="text-xs text-slate-500">{lesson.published ? 'Published' : 'Draft'}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleToggleStatus(lesson.id)}
-                          className={`inline-flex rounded-full px-3 py-1.5 text-xs font-medium transition cursor-pointer ${
-                            lesson.published
-                              ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                          }`}
-                        >
-                          {lesson.published ? 'Published' : 'Draft'}
-                        </button>
                         <button className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600">
                           <Edit2 className="h-4 w-4" strokeWidth={2} />
                         </button>
