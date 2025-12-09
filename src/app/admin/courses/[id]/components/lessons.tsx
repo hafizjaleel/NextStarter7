@@ -571,13 +571,30 @@ export function CourseLessons() {
               </div>
             {moduleLessons.length > 0 ? (
               <div className="space-y-3">
-                {moduleLessons.map((lesson) => (
+                {moduleLessons.map((lesson) => {
+                  const isDragging = draggedId === lesson.id;
+                  const isDropTarget = dragOverId === lesson.id;
+
+                  return (
                   <div
                     key={lesson.id}
-                    className="rounded-xl border border-slate-100 bg-white p-4 shadow-sm hover:shadow-md transition"
+                    draggable
+                    onDragStart={() => handleDragStart(lesson.id)}
+                    onDragOver={() => handleDragOver(lesson.id)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={() => handleDrop(lesson.id)}
+                    onDragEnd={handleDragEnd}
+                    className={`rounded-xl border bg-white p-4 shadow-sm transition ${
+                      isDragging
+                        ? 'opacity-50 border-slate-200'
+                        : isDropTarget
+                          ? 'border-emerald-300 bg-emerald-50 shadow-md'
+                          : 'border-slate-100 hover:shadow-md'
+                    }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3 flex-1">
+                        <GripVertical className="h-5 w-5 text-slate-400 flex-shrink-0 cursor-grab active:cursor-grabbing" strokeWidth={2} />
                         <input
                           type="checkbox"
                           checked={selectedLessonIds.includes(lesson.id)}
@@ -653,7 +670,8 @@ export function CourseLessons() {
                       </div>
                     </div>
                   </div>
-                ))}
+                );
+                })}
               </div>
             ) : (
               <p className="text-sm text-slate-500">No lessons in this module yet</p>
