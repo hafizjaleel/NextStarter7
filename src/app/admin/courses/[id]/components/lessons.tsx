@@ -419,12 +419,12 @@ export function CourseLessons({ courseId }: CourseLessonsProps) {
     });
   };
 
-  const handleDragStart = (id: number, e: React.DragEvent) => {
+  const handleDragStart = (id: string | number, e: React.DragEvent) => {
     e.dataTransfer.effectAllowed = 'move';
     setDraggedId(id);
   };
 
-  const handleDragOver = (id: number, e: React.DragEvent) => {
+  const handleDragOver = (id: string | number, e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     setDragOverId(id);
@@ -435,7 +435,7 @@ export function CourseLessons({ courseId }: CourseLessonsProps) {
     setDragOverId(null);
   };
 
-  const handleDrop = (targetId: number, e: React.DragEvent) => {
+  const handleDrop = async (targetId: string | number, e: React.DragEvent) => {
     e.preventDefault();
 
     if (draggedId === null || draggedId === targetId) {
@@ -454,22 +454,48 @@ export function CourseLessons({ courseId }: CourseLessonsProps) {
     }
 
     // Only allow reordering within the same module
-    if (draggedLesson.module !== targetLesson.module) {
+    if (draggedLesson.moduleId !== targetLesson.moduleId) {
       setDraggedId(null);
       setDragOverId(null);
       return;
     }
 
-    const draggedIndex = lessons.findIndex((l) => l.id === draggedId);
-    const targetIndex = lessons.findIndex((l) => l.id === targetId);
+    const moduleLessons = lessons.filter((l) => l.moduleId === draggedLesson.moduleId);
+    const draggedIndex = moduleLessons.findIndex((l) => l.id === draggedId);
+    const targetIndex = moduleLessons.findIndex((l) => l.id === targetId);
 
-    const newLessons = [...lessons];
-    const [movedLesson] = newLessons.splice(draggedIndex, 1);
-    newLessons.splice(targetIndex, 0, movedLesson);
+    const newModuleLessons = [...moduleLessons];
+    const [movedLesson] = newModuleLessons.splice(draggedIndex, 1);
+    newModuleLessons.splice(targetIndex, 0, movedLesson);
+
+    // Update lessonOrder for affected lessons
+    const updatedModuleLessons = newModuleLessons.map((lesson, index) => ({
+      ...lesson,
+      lessonOrder: index + 1,
+    }));
+
+    // Replace in main lessons array
+    const newLessons = lessons.map((l) => {
+      const updated = updatedModuleLessons.find((ul) => ul.id === l.id);
+      return updated || l;
+    });
 
     setLessons(newLessons);
     setDraggedId(null);
     setDragOverId(null);
+
+    // Send reorder updates to API
+    try {
+      for (const lesson of updatedModuleLessons) {
+        await fetch(`/api/v1/course/lesson/update/${lesson.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lessonOrder: lesson.lessonOrder }),
+        });
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update lesson order');
+    }
   };
 
   const handleDragEnd = () => {
