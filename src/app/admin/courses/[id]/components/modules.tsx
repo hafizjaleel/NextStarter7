@@ -260,7 +260,7 @@ export function CourseModules() {
       </SidePanel>
 
       <div className="space-y-3">
-        {modules.map((module) => {
+        {[...modules].sort((a, b) => a.moduleOrder - b.moduleOrder).map((module) => {
           const { lessonCount, duration } = getModuleStats(module.title);
           const isDragging = draggedId === module.id;
           const isDropTarget = dragOverId === module.id;
@@ -286,7 +286,12 @@ export function CourseModules() {
                 <div className="flex items-center gap-3 flex-1">
                   <GripVertical className="h-5 w-5 text-slate-400 flex-shrink-0 cursor-grab active:cursor-grabbing" strokeWidth={2} />
                   <div className="flex-1">
-                    <h4 className="text-base font-bold text-slate-900">{module.title}</h4>
+                    <div className="flex items-center gap-3">
+                      <h4 className="text-base font-bold text-slate-900">{module.title}</h4>
+                      <span className="inline-block rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                        #{module.moduleOrder}
+                      </span>
+                    </div>
                     <div className="flex items-center gap-4 mt-2 text-sm text-slate-600">
                       <span>{lessonCount} lesson{lessonCount !== 1 ? 's' : ''}</span>
                       <span>{duration}</span>
