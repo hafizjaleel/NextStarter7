@@ -75,14 +75,30 @@ export function CourseModules() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleEditModule = (id: number) => {
+    const moduleToEdit = modules.find((m) => m.id === id);
+    if (moduleToEdit) {
+      setFormData({ title: moduleToEdit.title });
+      setEditingId(id);
+      setShowForm(true);
+    }
+  };
+
   const handleAddModule = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.title) {
-      const newModule = {
-        id: Math.max(...modules.map((m) => m.id), 0) + 1,
-        title: formData.title,
-      };
-      setModules([...modules, newModule]);
+      if (editingId !== null) {
+        // Update existing module
+        setModules(modules.map((m) => (m.id === editingId ? { ...m, title: formData.title } : m)));
+        setEditingId(null);
+      } else {
+        // Add new module
+        const newModule = {
+          id: Math.max(...modules.map((m) => m.id), 0) + 1,
+          title: formData.title,
+        };
+        setModules([...modules, newModule]);
+      }
       setFormData({ title: '' });
       setShowForm(false);
     }
