@@ -516,6 +516,8 @@ export function CourseLessons() {
                           <Video className="h-5 w-5 text-blue-600 flex-shrink-0" strokeWidth={2} />
                         ) : lesson.type === 'pdf' ? (
                           <FileText className="h-5 w-5 text-orange-600 flex-shrink-0" strokeWidth={2} />
+                        ) : lesson.type === 'quiz' ? (
+                          <HelpCircle className="h-5 w-5 text-purple-600 flex-shrink-0" strokeWidth={2} />
                         ) : (
                           <FileText className="h-5 w-5 text-purple-600 flex-shrink-0" strokeWidth={2} />
                         )}
@@ -528,6 +530,20 @@ export function CourseLessons() {
                           </div>
                           <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
                             <span>{lesson.duration}</span>
+                            {lesson.type === 'quiz' && lesson.quizData && (
+                              <>
+                                <span>•</span>
+                                <span>{lesson.quizData.questions.length} questions</span>
+                                <span>•</span>
+                                <span>{lesson.quizData.passingScore}% to pass</span>
+                                {lesson.quizData.timeLimit > 0 && (
+                                  <>
+                                    <span>•</span>
+                                    <span>{lesson.quizData.timeLimit}m time limit</span>
+                                  </>
+                                )}
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>
