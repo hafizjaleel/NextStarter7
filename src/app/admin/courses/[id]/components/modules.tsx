@@ -225,6 +225,22 @@ export function CourseModules() {
               required
             />
           </div>
+          <div>
+            <label htmlFor="moduleOrder" className="block text-sm font-medium text-slate-900 mb-1">
+              Module Order
+            </label>
+            <input
+              id="moduleOrder"
+              name="moduleOrder"
+              type="number"
+              min="1"
+              value={formData.moduleOrder}
+              onChange={handleInputChange}
+              placeholder="e.g., 1"
+              className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 transition focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              required
+            />
+          </div>
           <div className="flex gap-3 pt-2">
             <button
               type="submit"
