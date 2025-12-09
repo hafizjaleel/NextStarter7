@@ -134,9 +134,15 @@ export function CourseModules() {
       {showForm && (
         <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-base font-bold text-slate-900">Add New Module</h3>
+            <h3 className="text-base font-bold text-slate-900">
+              {editingId !== null ? 'Edit Module' : 'Add New Module'}
+            </h3>
             <button
-              onClick={() => setShowForm(false)}
+              onClick={() => {
+                setShowForm(false);
+                setEditingId(null);
+                setFormData({ title: '' });
+              }}
               className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
             >
               <X className="h-4 w-4" strokeWidth={2} />
