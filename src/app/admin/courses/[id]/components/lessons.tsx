@@ -332,6 +332,7 @@ export function CourseLessons() {
                   <option value="video">Video</option>
                   <option value="pdf">PDF</option>
                   <option value="downloadable">Downloadable Content</option>
+                  <option value="quiz">Quiz</option>
                 </select>
               </div>
               <div>
