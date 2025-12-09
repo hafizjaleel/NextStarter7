@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronRight, Plus, Edit2, Trash2, X } from 'lucide-react';
+import { ChevronRight, Plus, Edit2, Trash2 } from 'lucide-react';
+import { SidePanel } from '@/components/side-panel';
 
 const initialModules = [
   {
