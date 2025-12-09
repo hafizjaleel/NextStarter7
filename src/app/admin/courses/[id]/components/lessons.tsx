@@ -136,7 +136,8 @@ export function CourseLessons() {
     const hasValidContent =
       (formData.type === 'video' && (formData.muxVideo || editingId !== null)) ||
       (formData.type === 'pdf' && (formData.pdfFile || editingId !== null)) ||
-      (formData.type === 'downloadable' && (formData.downloadableFile || editingId !== null));
+      (formData.type === 'downloadable' && (formData.downloadableFile || editingId !== null)) ||
+      (formData.type === 'quiz' && formData.quizData.questions.length > 0);
 
     if (formData.title && formData.duration && formData.module && hasValidContent) {
       if (editingId !== null) {
@@ -147,9 +148,10 @@ export function CourseLessons() {
               ? {
                   ...l,
                   title: formData.title,
-                  type: formData.type as 'video' | 'pdf' | 'downloadable',
+                  type: formData.type as 'video' | 'pdf' | 'downloadable' | 'quiz',
                   duration: formData.duration,
                   module: formData.module,
+                  ...(formData.type === 'quiz' && { quizData: formData.quizData }),
                 }
               : l,
           ),
@@ -157,14 +159,17 @@ export function CourseLessons() {
         setEditingId(null);
       } else {
         // Add new lesson
-        const newLesson = {
+        const newLesson: any = {
           id: Math.max(...lessons.map((l) => l.id), 0) + 1,
           title: formData.title,
-          type: formData.type as 'video' | 'pdf' | 'downloadable',
+          type: formData.type as 'video' | 'pdf' | 'downloadable' | 'quiz',
           duration: formData.duration,
           module: formData.module,
           published: false,
         };
+        if (formData.type === 'quiz') {
+          newLesson.quizData = formData.quizData;
+        }
         setLessons([...lessons, newLesson]);
       }
       setFormData({
@@ -175,6 +180,12 @@ export function CourseLessons() {
         muxVideo: '',
         pdfFile: null,
         downloadableFile: null,
+        quizData: {
+          questions: [],
+          passingScore: 70,
+          timeLimit: 0,
+          maxAttempts: 0,
+        },
       });
       setShowForm(false);
     }
