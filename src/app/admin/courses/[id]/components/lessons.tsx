@@ -96,24 +96,57 @@ export function CourseLessons({ courseId }: CourseLessonsProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files && files[0]) {
-      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    try {
+      setUploading(true);
+      const formDataToSend = new FormData();
+      Array.from(files).forEach((file) => {
+        formDataToSend.append('files', file);
+      });
+
+      const response = await fetch('/api/v1/app/upload', {
+        method: 'POST',
+        body: formDataToSend,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload files');
+      }
+
+      const data = await response.json();
+      const uploadedFiles = data.files || [];
+
+      setFormData((prev) => ({
+        ...prev,
+        uploadedFiles: [...prev.uploadedFiles, ...uploadedFiles],
+      }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'File upload failed');
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleEditLesson = (id: number) => {
+  const handleRemoveUploadedFile = (fileId: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      uploadedFiles: prev.uploadedFiles.filter((f) => f.id !== fileId),
+    }));
+  };
+
+  const handleEditLesson = (id: string | number) => {
     const lessonToEdit = lessons.find((l) => l.id === id);
     if (lessonToEdit) {
       setFormData({
         title: lessonToEdit.title,
-        type: lessonToEdit.type,
-        duration: lessonToEdit.duration,
-        module: lessonToEdit.module,
-        muxVideo: lessonToEdit.type === 'video' ? 'existing-video' : '',
-        pdfFile: null,
-        downloadableFile: null,
+        lessonType: lessonToEdit.lessonType,
+        moduleId: lessonToEdit.moduleId,
+        lessonOrder: lessonToEdit.lessonOrder.toString(),
+        muxUrl: lessonToEdit.muxUrl || '',
+        uploadedFiles: lessonToEdit.files || [],
         quizData: lessonToEdit.quizData || {
           questions: [],
           passingScore: 70,
