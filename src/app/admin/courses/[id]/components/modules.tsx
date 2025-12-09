@@ -229,6 +229,17 @@ export function CourseModules() {
           );
         })}
       </div>
+
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        title="Delete Module?"
+        message="This action cannot be undone. All lessons in this module will remain, but the module will be deleted."
+        confirmText="Delete"
+        cancelText="Cancel"
+        isDangerous={true}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteConfirm({ isOpen: false, id: null })}
+      />
     </div>
   );
 }
