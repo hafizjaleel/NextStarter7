@@ -122,7 +122,14 @@ export function CourseModules() {
   };
 
   const handleDeleteModule = (id: number) => {
-    setModules(modules.filter((m) => m.id !== id));
+    setDeleteConfirm({ isOpen: true, id });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteConfirm.id !== null) {
+      setModules(modules.filter((m) => m.id !== deleteConfirm.id));
+      setDeleteConfirm({ isOpen: false, id: null });
+    }
   };
 
   const handleClosePanel = () => {
